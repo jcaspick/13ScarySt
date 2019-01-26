@@ -7,7 +7,7 @@ public class EventDetails
 {
     public Room room;
     public Player player;
-    public int flashlightCharge;
+    public int intValue;
 }
 
 public class EventManager : MonoBehaviour
@@ -15,8 +15,9 @@ public class EventManager : MonoBehaviour
     public enum EventType
     {
         RoomClicked,
-        TurnStart,
-        Flashlight
+        UpdateActionsUI,
+        UpdateFearUI,
+        UpdateTurnsUI
     }
 
     public static EventManager instance;

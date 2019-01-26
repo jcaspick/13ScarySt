@@ -14,4 +14,26 @@ public class Player : MonoBehaviour
     {
         remainingActions = 2;
     }
+
+    public bool CanMove()
+    {
+        if (isGhost)
+        {
+            foreach (Room room in currentRoom.doors)
+            {
+                if (!room.isLit) return true;
+            }
+            foreach (Room room in currentRoom.sharedWalls)
+            {
+                if (!room.isLit) return true;
+            }
+        } else
+        {
+            foreach (Room room in currentRoom.doors)
+            {
+                if (flashLightCharge > 0 || room.isLit) return true;
+            }
+        }
+        return false;
+    }
 }

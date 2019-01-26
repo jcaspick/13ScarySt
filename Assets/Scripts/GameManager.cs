@@ -7,15 +7,6 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    public List<Color> playerColors;
-    public Color ghostColor;
-
-    private void Awake()
-    {
-        if (instance == null) instance = this;
-        else if (instance != this) Destroy(gameObject);
-    }
-
     public enum Actions
     {
         None,
@@ -32,15 +23,26 @@ public class GameManager : MonoBehaviour
 
     public int numHumans = 2;
     public int numGhosts = 1;
+    int activeGhosts;
 
     public List<Room> house;
-
+    public List<Color> playerColors;
+    public Color ghostColor;
     public GameObject playerMarker;
+
     List<Player> players;
     Player activePlayer = null;
     int activePlayerIndex = -1;
-
+    int fearLevel = 0;
+    public int maxFear = 13;
     bool firstRound = true;
+    bool ghostTurn = false;
+
+    private void Awake()
+    {
+        if (instance == null) instance = this;
+        else if (instance != this) Destroy(gameObject);
+    }
 
     private void Start()
     {
@@ -49,7 +51,9 @@ public class GameManager : MonoBehaviour
 
     void InitializeGame()
     {
+        fearLevel = 0;
         players = new List<Player>();
+        activeGhosts = numGhosts;
 
         for (int i = 0; i < numHumans; i++)
         {
@@ -77,18 +81,34 @@ public class GameManager : MonoBehaviour
 
     void BeginPlayerTurn()
     {
-        // TODO replace this with events
-        turnDisplay.text = activePlayer.playerName;
+        EventDetails details = new EventDetails();
+        details.player = activePlayer;
+        EventManager.Invoke(EventManager.EventType.UpdateTurnsUI, details);
 
         if (!firstRound)
         {
+            if (activePlayer.isGhost && activePlayer.currentRoom.isLit && !activePlayer.CanMove())
+            {
+                activeGhosts--;
+                players.Remove(activePlayer);
+                activePlayer.gameObject.SetActive(false);
+                Debug.Log("GHOST BUSTED");
+
+                if (activeGhosts <= 0)
+                {
+                    UIManager.ShowAnnouncement("HUMANS WIN");
+                }
+
+                EndPlayerTurn();
+                return;
+            }
+
             activePlayer.remainingActions = 2;
             if (activePlayer.isGhost && activePlayer.currentRoom.isLit)
                 activePlayer.remainingActions--;
 
-            EventDetails details = new EventDetails();
             details.player = activePlayer;
-            EventManager.Invoke(EventManager.EventType.TurnStart, details);
+            EventManager.Invoke(EventManager.EventType.UpdateActionsUI, details);
         }
     }
 
@@ -98,15 +118,24 @@ public class GameManager : MonoBehaviour
         if (activePlayerIndex >= players.Count)
         {
             activePlayerIndex = 0;
+
             if (firstRound)
             {
                 firstRound = false;
                 EventManager.RemoveListener(EventManager.EventType.RoomClicked, ChooseStartLocation);
+            } else
+            {
+                if (fearLevel >= maxFear)
+                {
+                    UIManager.ShowAnnouncement("GHOSTS WIN");
+                    return;
+                }
+                fearLevel++;
             }
         }
 
         activePlayer = players[activePlayerIndex];
-        StartCoroutine(EndOfTurnDelay(firstRound ? 0 : 1));
+        StartCoroutine(EndOfTurnDelay(firstRound ? 0 : 0.5f));
     }
 
     void HandlePlayerAction(Actions type, Room room = null)
@@ -120,8 +149,6 @@ public class GameManager : MonoBehaviour
                 if (!activePlayer.isGhost && !room.isLit)
                 {
                     activePlayer.flashLightCharge--;
-                    EventManager.Invoke(EventManager.EventType.Flashlight,
-                        new EventDetails() { flashlightCharge = activePlayer.flashLightCharge });
                 }
                 activePlayer.transform.position = room.transform.position;
                 activePlayer.currentRoom.playersInRoom.Remove(activePlayer);
@@ -139,20 +166,17 @@ public class GameManager : MonoBehaviour
                 break;
             case Actions.ChargeFlashlight:
                 activePlayer.flashLightCharge = 4;
-                EventManager.Invoke(EventManager.EventType.Flashlight,
-                    new EventDetails() { flashlightCharge = activePlayer.flashLightCharge });
                 activePlayer.remainingActions--;
                 break;
         }
 
+        EventDetails details = new EventDetails();
+        details.player = activePlayer;
+        EventManager.Invoke(EventManager.EventType.UpdateActionsUI, details);
+
         if (activePlayer.remainingActions <= 0)
         {
             EndPlayerTurn();
-        } else
-        {
-            EventDetails details = new EventDetails();
-            details.player = activePlayer;
-            EventManager.Invoke(EventManager.EventType.TurnStart, details);
         }
     }
 
@@ -163,6 +187,8 @@ public class GameManager : MonoBehaviour
 
     void ChooseStartLocation(EventDetails details)
     {
+        if (activePlayer.isGhost && details.room.playersInRoom.Count > 0) return;
+
         activePlayer.transform.position = details.room.transform.position;
         activePlayer.gameObject.SetActive(true);
         activePlayer.currentRoom = details.room;
@@ -183,6 +209,24 @@ public class GameManager : MonoBehaviour
     IEnumerator EndOfTurnDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
+
+        if (activePlayer.isGhost && !ghostTurn)
+        {
+            ghostTurn = true;
+            foreach (Player player in players)
+            {
+                if (player.isGhost && !firstRound) player.gameObject.SetActive(true);
+            }
+        }
+        else if (!activePlayer.isGhost && ghostTurn)
+        {
+            ghostTurn = false;
+            foreach (Player player in players)
+            {
+                if (player.isGhost) player.gameObject.SetActive(false);
+            }
+        }
+
         BeginPlayerTurn();
     }
 }
