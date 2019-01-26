@@ -165,6 +165,7 @@ MonoBehaviour:
   - {fileID: 756596628}
   - {fileID: 741052065}
   - {fileID: 945734418}
+  playersInRoom: []
   isLit: 0
 --- !u!65 &16335542
 BoxCollider:
@@ -272,6 +273,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   doors: []
   sharedWalls: []
+  playersInRoom: []
   isLit: 0
 --- !u!65 &26091701
 BoxCollider:
@@ -451,6 +453,7 @@ MonoBehaviour:
   - {fileID: 587057952}
   sharedWalls:
   - {fileID: 1547009085}
+  playersInRoom: []
   isLit: 0
 --- !u!65 &221895881
 BoxCollider:
@@ -562,6 +565,7 @@ MonoBehaviour:
   sharedWalls:
   - {fileID: 1547009085}
   - {fileID: 16335541}
+  playersInRoom: []
   isLit: 0
 --- !u!65 &249746266
 BoxCollider:
@@ -621,6 +625,105 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 249746263}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &308594489
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 308594493}
+  - component: {fileID: 308594492}
+  - component: {fileID: 308594491}
+  - component: {fileID: 308594490}
+  m_Layer: 5
+  m_Name: Canvas
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &308594490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 308594489}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1301386320, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+--- !u!114 &308594491
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 308594489}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1980459831, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UiScaleMode: 0
+  m_ReferencePixelsPerUnit: 100
+  m_ScaleFactor: 1
+  m_ReferenceResolution: {x: 800, y: 600}
+  m_ScreenMatchMode: 0
+  m_MatchWidthOrHeight: 0
+  m_PhysicalUnit: 3
+  m_FallbackScreenDPI: 96
+  m_DefaultSpriteDPI: 96
+  m_DynamicPixelsPerUnit: 1
+--- !u!223 &308594492
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 308594489}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 0
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
+--- !u!224 &308594493
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 308594489}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_Children:
+  - {fileID: 809365670}
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0, y: 0}
 --- !u!1 &467940558
 GameObject:
   m_ObjectHideFlags: 0
@@ -669,6 +772,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   doors: []
   sharedWalls: []
+  playersInRoom: []
   isLit: 0
 --- !u!65 &467940561
 BoxCollider:
@@ -858,6 +962,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   doors: []
   sharedWalls: []
+  playersInRoom: []
   isLit: 0
 --- !u!65 &553446344
 BoxCollider:
@@ -970,6 +1075,7 @@ MonoBehaviour:
   - {fileID: 1386054183}
   sharedWalls:
   - {fileID: 1255473334}
+  playersInRoom: []
   isLit: 0
 --- !u!65 &587057953
 BoxCollider:
@@ -1122,6 +1228,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   doors: []
   sharedWalls: []
+  playersInRoom: []
   isLit: 0
 --- !u!65 &638259624
 BoxCollider:
@@ -1232,6 +1339,7 @@ MonoBehaviour:
   sharedWalls:
   - {fileID: 16335541}
   - {fileID: 2061338097}
+  playersInRoom: []
   isLit: 0
 --- !u!65 &741052066
 BoxCollider:
@@ -1342,6 +1450,7 @@ MonoBehaviour:
   - {fileID: 2061338097}
   sharedWalls:
   - {fileID: 16335541}
+  playersInRoom: []
   isLit: 0
 --- !u!65 &756596629
 BoxCollider:
@@ -1401,6 +1510,85 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 756596626}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &809365669
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 809365670}
+  - component: {fileID: 809365672}
+  - component: {fileID: 809365671}
+  m_Layer: 5
+  m_Name: TurnDisplay
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &809365670
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 809365669}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 308594493}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 300, y: 45}
+  m_Pivot: {x: 0.5, y: 1}
+--- !u!114 &809365671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 809365669}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 24
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 2
+    m_MaxSize: 40
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: Current Player
+--- !u!222 &809365672
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 809365669}
+  m_CullTransparentMesh: 0
 --- !u!1 &826898856
 GameObject:
   m_ObjectHideFlags: 0
@@ -1452,6 +1640,7 @@ MonoBehaviour:
   sharedWalls:
   - {fileID: 1255473334}
   - {fileID: 945734418}
+  playersInRoom: []
   isLit: 0
 --- !u!65 &826898859
 BoxCollider:
@@ -1559,6 +1748,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   doors: []
   sharedWalls: []
+  playersInRoom: []
   isLit: 0
 --- !u!65 &850051078
 BoxCollider:
@@ -1715,6 +1905,7 @@ MonoBehaviour:
   - {fileID: 16335541}
   - {fileID: 826898858}
   - {fileID: 1386054183}
+  playersInRoom: []
   isLit: 0
 --- !u!65 &945734419
 BoxCollider:
@@ -1822,6 +2013,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   doors: []
   sharedWalls: []
+  playersInRoom: []
   isLit: 0
 --- !u!65 &1194466495
 BoxCollider:
@@ -1881,6 +2073,72 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1194466492}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1195944117
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1195944120}
+  - component: {fileID: 1195944119}
+  - component: {fileID: 1195944118}
+  m_Layer: 0
+  m_Name: EventSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1195944118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1195944117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1077351063, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalAxis: Horizontal
+  m_VerticalAxis: Vertical
+  m_SubmitButton: Submit
+  m_CancelButton: Cancel
+  m_InputActionsPerSecond: 10
+  m_RepeatDelay: 0.5
+  m_ForceModuleActive: 0
+--- !u!114 &1195944119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1195944117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -619905303, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_FirstSelected: {fileID: 0}
+  m_sendNavigationEvents: 1
+  m_DragThreshold: 10
+--- !u!4 &1195944120
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1195944117}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1255473332
 GameObject:
   m_ObjectHideFlags: 0
@@ -1933,6 +2191,7 @@ MonoBehaviour:
   - {fileID: 1629970472}
   - {fileID: 587057952}
   - {fileID: 826898858}
+  playersInRoom: []
   isLit: 0
 --- !u!65 &1255473335
 BoxCollider:
@@ -1992,6 +2251,88 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1255473332}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1331643162
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1331643164}
+  - component: {fileID: 1331643163}
+  - component: {fileID: 1331643165}
+  m_Layer: 0
+  m_Name: master
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1331643163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1331643162}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f07235c63dc0dba47aaf5108efe3d102, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerColors:
+  - {r: 1, g: 0, b: 0, a: 0}
+  - {r: 0.00965023, g: 0, b: 1, a: 0}
+  - {r: 0.091415524, g: 1, b: 0, a: 0}
+  - {r: 1, g: 0, b: 0.89338493, a: 0}
+  ghostColor: {r: 0.03773582, g: 0.036489826, b: 0.036489826, a: 0}
+  turnDisplay: {fileID: 809365671}
+  numHumans: 2
+  numGhosts: 1
+  house:
+  - {fileID: 1629970472}
+  - {fileID: 221895880}
+  - {fileID: 587057952}
+  - {fileID: 1400901704}
+  - {fileID: 1547009085}
+  - {fileID: 1386054183}
+  - {fileID: 1255473334}
+  - {fileID: 826898858}
+  - {fileID: 945734418}
+  - {fileID: 249746265}
+  - {fileID: 16335541}
+  - {fileID: 741052065}
+  - {fileID: 2061338097}
+  - {fileID: 756596628}
+  playerMarker: {fileID: 6555771716461888819, guid: 1c4825217bdfa544bb6d59d1ca20fa57,
+    type: 3}
+--- !u!4 &1331643164
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1331643162}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.3861022, y: -0.099209785, z: 7.465064}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1331643165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1331643162}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2f2ed22d0871d743b5dbf0748115002, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1386054181
 GameObject:
   m_ObjectHideFlags: 0
@@ -2044,6 +2385,7 @@ MonoBehaviour:
   - {fileID: 1255473334}
   sharedWalls:
   - {fileID: 945734418}
+  playersInRoom: []
   isLit: 0
 --- !u!65 &1386054184
 BoxCollider:
@@ -2155,6 +2497,7 @@ MonoBehaviour:
   - {fileID: 249746265}
   - {fileID: 945734418}
   sharedWalls: []
+  playersInRoom: []
   isLit: 0
 --- !u!65 &1400901705
 BoxCollider:
@@ -2262,6 +2605,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   doors: []
   sharedWalls: []
+  playersInRoom: []
   isLit: 0
 --- !u!65 &1416487034
 BoxCollider:
@@ -2369,6 +2713,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   doors: []
   sharedWalls: []
+  playersInRoom: []
   isLit: 0
 --- !u!65 &1506001085
 BoxCollider:
@@ -2479,6 +2824,7 @@ MonoBehaviour:
   sharedWalls:
   - {fileID: 221895880}
   - {fileID: 249746265}
+  playersInRoom: []
   isLit: 0
 --- !u!65 &1547009086
 BoxCollider:
@@ -2586,6 +2932,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   doors: []
   sharedWalls: []
+  playersInRoom: []
   isLit: 0
 --- !u!65 &1589498136
 BoxCollider:
@@ -2696,6 +3043,7 @@ MonoBehaviour:
   - {fileID: 587057952}
   sharedWalls:
   - {fileID: 1255473334}
+  playersInRoom: []
   isLit: 0
 --- !u!65 &1629970473
 BoxCollider:
@@ -2803,6 +3151,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   doors: []
   sharedWalls: []
+  playersInRoom: []
   isLit: 0
 --- !u!65 &1832117561
 BoxCollider:
@@ -2910,6 +3259,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   doors: []
   sharedWalls: []
+  playersInRoom: []
   isLit: 0
 --- !u!65 &1851138907
 BoxCollider:
@@ -3017,6 +3367,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   doors: []
   sharedWalls: []
+  playersInRoom: []
   isLit: 0
 --- !u!65 &2000531929
 BoxCollider:
@@ -3124,6 +3475,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   doors: []
   sharedWalls: []
+  playersInRoom: []
   isLit: 0
 --- !u!65 &2056893132
 BoxCollider:
@@ -3234,6 +3586,7 @@ MonoBehaviour:
   - {fileID: 756596628}
   sharedWalls:
   - {fileID: 741052065}
+  playersInRoom: []
   isLit: 0
 --- !u!65 &2061338098
 BoxCollider:
@@ -3341,6 +3694,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   doors: []
   sharedWalls: []
+  playersInRoom: []
   isLit: 0
 --- !u!65 &2075160702
 BoxCollider:
