@@ -14,10 +14,29 @@ public class Room : MonoBehaviour
         if (on)
         {
             GetComponent<Renderer>().material.color = new Color(0.6f, 0.6f, 0.6f, 1.0f);
+            isLit = true;
         }
         else
         {
             GetComponent<Renderer>().material.color = new Color(0.1f, 0.1f, 0.1f, 1.0f);
+            isLit = false;
+        }
+    }
+
+    public void SetHighlight(bool highlighted)
+    {
+        if (highlighted)
+        {
+            GetComponent<Renderer>().material.color = new Color(0.2f, 0.7f, 0.3f, 1.0f);
+        } else
+        {
+            if (isLit)
+            {
+                GetComponent<Renderer>().material.color = new Color(0.6f, 0.6f, 0.6f, 1.0f);
+            } else
+            {
+                GetComponent<Renderer>().material.color = new Color(0.1f, 0.1f, 0.1f, 1.0f);
+            }
         }
     }
 

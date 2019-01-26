@@ -7,7 +7,7 @@ public class Player : MonoBehaviour
     public string playerName;
     public bool isGhost = false;
     public Room currentRoom = null;
-
+    public int flashLightCharge = 4;
     public int remainingActions = 0;
 
     public void BeginTurn()

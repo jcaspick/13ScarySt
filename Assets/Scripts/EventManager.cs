@@ -6,13 +6,17 @@ using UnityEngine;
 public class EventDetails
 {
     public Room room;
+    public Player player;
+    public int flashlightCharge;
 }
 
 public class EventManager : MonoBehaviour
 {
     public enum EventType
     {
-        RoomClicked
+        RoomClicked,
+        TurnStart,
+        Flashlight
     }
 
     public static EventManager instance;
