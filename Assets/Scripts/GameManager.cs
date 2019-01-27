@@ -37,6 +37,7 @@ public class GameManager : MonoBehaviour
     public int maxFear = 13;
     bool firstRound = true;
     bool ghostTurn = false;
+    bool allowInput = false;
 
     private void Awake()
     {
@@ -79,6 +80,8 @@ public class GameManager : MonoBehaviour
         activePlayer = players[activePlayerIndex];
         EventManager.AddListener(EventManager.EventType.RoomClicked, ChooseStartLocation);
         UIManager.instance.fearMeter.SetFearLevel(0);
+        UIManager.FirstTurnUI();
+        allowInput = true;
         BeginPlayerTurn();
     }
 
@@ -90,22 +93,6 @@ public class GameManager : MonoBehaviour
 
         if (!firstRound)
         {
-            if (activePlayer.isGhost && activePlayer.currentRoom.isLit && !activePlayer.CanMove())
-            {
-                activeGhosts--;
-                players.Remove(activePlayer);
-                activePlayer.gameObject.SetActive(false);
-                Debug.Log("GHOST BUSTED");
-
-                if (activeGhosts <= 0)
-                {
-                    UIManager.ShowAnnouncement("HUMANS WIN");
-                }
-
-                EndPlayerTurn();
-                return;
-            }
-
             activePlayer.remainingActions = 2;
             if (activePlayer.isGhost && activePlayer.currentRoom.isLit)
                 activePlayer.remainingActions--;
@@ -125,6 +112,7 @@ public class GameManager : MonoBehaviour
             if (firstRound)
             {
                 firstRound = false;
+                UIManager.ShowUI();
                 EventManager.RemoveListener(EventManager.EventType.RoomClicked, ChooseStartLocation);
             } else
             {
@@ -134,7 +122,8 @@ public class GameManager : MonoBehaviour
                 EventManager.Invoke(EventManager.EventType.UpdateFearUI, details);
                 if (fearLevel >= maxFear)
                 {
-                    UIManager.ShowAnnouncement("GHOSTS WIN");
+                    UIManager.EndGameOverlay("GHOSTS WIN");
+                    allowInput = false;
                     return;
                 }
             }
@@ -180,7 +169,11 @@ public class GameManager : MonoBehaviour
         details.player = activePlayer;
         EventManager.Invoke(EventManager.EventType.UpdateActionsUI, details);
 
-        if (activePlayer.remainingActions <= 0)
+        if (CheckHumanWinCondition())
+        {
+            UIManager.EndGameOverlay("HUMANS WIN");
+            allowInput = false;
+        } else  if (activePlayer.remainingActions <= 0)
         {
             EndPlayerTurn();
         }
@@ -188,11 +181,13 @@ public class GameManager : MonoBehaviour
 
     public static void PlayerInput(Actions type, Room room = null)
     {
+        if (!instance.allowInput) return;
         instance.HandlePlayerAction(type, room);
     }
 
     void ChooseStartLocation(EventDetails details)
     {
+        if (!instance.allowInput) return;
         if (activePlayer.isGhost && details.room.playersInRoom.Count > 0) return;
 
         activePlayer.transform.position = details.room.transform.position;
@@ -214,11 +209,15 @@ public class GameManager : MonoBehaviour
 
     IEnumerator EndOfTurnDelay(float delay)
     {
+        allowInput = false;
         yield return new WaitForSeconds(delay);
 
         if (activePlayer.isGhost && !ghostTurn)
         {
             ghostTurn = true;
+
+            yield return StartCoroutine(UIManager.instance.AvertYourEyesFadeIn(4.0f));
+
             foreach (Player player in players)
             {
                 if (player.isGhost && !firstRound) player.gameObject.SetActive(true);
@@ -233,6 +232,27 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        allowInput = true;
         BeginPlayerTurn();
+    }
+
+    bool CheckHumanWinCondition()
+    {
+        foreach (Player player in players)
+        {
+            if (!player.isGhost) continue;
+            if (player.currentRoom.isLit && !player.CanMove())
+            {
+                activeGhosts--;
+                players.Remove(player);
+
+                if (activeGhosts <= 0)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

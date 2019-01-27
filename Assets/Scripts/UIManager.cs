@@ -21,9 +21,11 @@ public class UIManager : MonoBehaviour
 
     public Text turnDisplay;
     public Text remainingActions;
-    public Text announcement;
+    public Text endGameText;
 
-    public CanvasGroup screenFader;
+    public GameObject actionsCounter;
+    public CanvasGroup avertYourEyesOverlay;
+    public CanvasGroup endGameOverlay;
     public UIBatteryMeter batteryMeter;
     public UIFearMeter fearMeter;
 
@@ -74,6 +76,7 @@ public class UIManager : MonoBehaviour
         {
             if (activePlayer.isGhost)
             {
+                batteryMeter.gameObject.SetActive(false);
                 ghostActions.SetActive(true);
                 humanActions.SetActive(false);
                 ghostIdle.interactable = !activePlayer.currentRoom.isLit;
@@ -82,6 +85,7 @@ public class UIManager : MonoBehaviour
             }
             else
             {
+                batteryMeter.gameObject.SetActive(true);
                 ghostActions.SetActive(false);
                 humanActions.SetActive(true);
                 idleButton.interactable = true;
@@ -208,21 +212,78 @@ public class UIManager : MonoBehaviour
         return false;
     }
 
-    public static void ShowAnnouncement(string text)
+    public static void EndGameOverlay(string text)
     {
-        instance.StartCoroutine(instance.AnnouncementFadeIn(0.5f, text));
+        instance.StartCoroutine(instance.EndGameFadeIn(0.5f, text));
     }
 
-    IEnumerator AnnouncementFadeIn(float duration, string text)
+    IEnumerator EndGameFadeIn(float duration, string text)
     {
+        endGameText.text = text;
         float elapsed = 0.0f;
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
-            screenFader.alpha = 0.5f * (elapsed / duration);
+            endGameOverlay.alpha = elapsed / duration;
             yield return null;
         }
-        announcement.text = text;
-        announcement.gameObject.SetActive(true);
+    }
+
+    public static void AvertYourEyesOverlay(float duration)
+    {
+        instance.StartCoroutine(instance.AvertYourEyesFadeIn(1.0f));
+    }
+
+    public IEnumerator AvertYourEyesFadeIn(float duration)
+    {
+        avertYourEyesOverlay.gameObject.SetActive(true);
+        float fadeDuration = 0.5f;
+        float elapsed = 0.0f;
+
+        while (elapsed < fadeDuration)
+        {
+            elapsed += Time.deltaTime;
+            avertYourEyesOverlay.alpha = elapsed / fadeDuration;
+            yield return null;
+        }
+
+        elapsed = 0.0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            if (Input.GetMouseButton(0))
+            {
+                elapsed = duration;
+            }
+            yield return null;
+        }
+
+        elapsed = 0.0f;
+        while (elapsed < fadeDuration)
+        {
+            elapsed += Time.deltaTime;
+            avertYourEyesOverlay.alpha = 1.0f - (elapsed / fadeDuration);
+            yield return null;
+        }
+
+        avertYourEyesOverlay.alpha = 0.0f;
+        avertYourEyesOverlay.gameObject.SetActive(false);
+    }
+
+    public static void FirstTurnUI()
+    {
+        instance.humanActions.gameObject.SetActive(false);
+        instance.ghostActions.gameObject.SetActive(false);
+        instance.fearMeter.gameObject.SetActive(false);
+        instance.actionsCounter.SetActive(false);
+        instance.batteryMeter.gameObject.SetActive(false);
+    }
+
+    public static void ShowUI()
+    {
+        instance.fearMeter.gameObject.SetActive(true);
+        instance.actionsCounter.SetActive(true);
+        instance.batteryMeter.gameObject.SetActive(true);
+        instance.humanActions.gameObject.SetActive(true);
     }
 }
