@@ -118,11 +118,13 @@ public class UIManager : MonoBehaviour
 
     void IdleButton()
     {
+        CancelExistingActions();
         GameManager.PlayerInput(GameManager.Actions.Idle);
     }
 
     void MoveButton()
     {
+        CancelExistingActions();
         nextAction = GameManager.Actions.Move;
         validRooms.Clear();
 
@@ -172,11 +174,13 @@ public class UIManager : MonoBehaviour
 
     void LightsOnButton()
     {
+        CancelExistingActions();
         GameManager.PlayerInput(GameManager.Actions.TurnOnLight, activePlayer.currentRoom);
     }
 
     void LightsOffButton()
     {
+        CancelExistingActions();
         nextAction = GameManager.Actions.TurnOffLight;
         validRooms.Clear();
 
@@ -202,6 +206,7 @@ public class UIManager : MonoBehaviour
 
     void ChargeButton()
     {
+        CancelExistingActions();
         GameManager.PlayerInput(GameManager.Actions.ChargeFlashlight);
     }
 
@@ -319,5 +324,20 @@ public class UIManager : MonoBehaviour
         instance.actionsCounter.SetActive(true);
         instance.batteryMeter.gameObject.SetActive(true);
         instance.humanActions.gameObject.SetActive(true);
+    }
+
+    void CancelExistingActions()
+    {
+        if (nextAction != GameManager.Actions.None)
+        {
+            nextAction = GameManager.Actions.None;
+            for (int i = activeIndicators.Count - 1; i >= 0; i--)
+            {
+                GameObject toDelete = activeIndicators[i];
+                activeIndicators.Remove(toDelete);
+                Destroy(toDelete);
+            }
+            EventManager.RemoveListener(EventManager.EventType.RoomClicked, SelectRoom);
+        }
     }
 }
