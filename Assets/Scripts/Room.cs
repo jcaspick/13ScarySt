@@ -125,4 +125,14 @@ public class Room : MonoBehaviour
         }
         lightOverlay.color = Color.clear;
     }
+
+    public bool ContainsGhost()
+    {
+        foreach (Player player in playersInRoom)
+        {
+            if (player.isGhost) return true;
+        }
+
+        return false;
+    }
 }

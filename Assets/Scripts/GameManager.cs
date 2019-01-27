@@ -172,6 +172,7 @@ public class GameManager : MonoBehaviour
                 break;
             case Actions.TurnOnLight:
                 room.SetLight(true);
+                CheckForCaughtGhosts(activePlayer.currentRoom);
                 activePlayer.remainingActions--;
                 break;
             case Actions.TurnOffLight:
@@ -282,6 +283,8 @@ public class GameManager : MonoBehaviour
             if (player.currentRoom.isLit && !player.CanMove())
             {
                 activeGhosts--;
+
+
                 players.Remove(player);
 
                 if (activeGhosts <= 0)
@@ -292,5 +295,37 @@ public class GameManager : MonoBehaviour
         }
 
         return false;
+    }
+
+    void CheckForCaughtGhosts(Room room)
+    {
+        if (room.ContainsGhost())
+        {
+            StartCoroutine(CaughtGhost(room));
+        }
+    }
+
+    IEnumerator CaughtGhost(Room room)
+    {
+        Player ghostIcon = Instantiate(playerMarker).GetComponent<Player>();
+        ghostIcon.color = ghostColor;
+        ghostIcon.mainSprite.sprite = ghostIcon.sprites[0];
+        ghostIcon.mainSprite.color = ghostIcon.color;
+        ghostIcon.glowSprite.sprite = ghostIcon.sprites[1];
+
+        ghostIcon.transform.position = room.transform.position + Vector3.up;
+
+        float duration = 0.8f;
+        float elapsed = 0.0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            ghostIcon.transform.position += Vector3.forward * Time.deltaTime;
+            ghostIcon.mainSprite.color = Color.Lerp(Color.white, Color.clear, elapsed / duration);
+            ghostIcon.glowSprite.color = Color.Lerp(Color.white, Color.clear, elapsed / duration);
+            yield return null;
+        }
+
+        Destroy(ghostIcon.gameObject);
     }
 }
