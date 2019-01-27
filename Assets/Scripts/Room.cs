@@ -31,22 +31,22 @@ public class Room : MonoBehaviour
         }
     }
 
-    public void SetHighlight(bool highlighted)
-    {
-        if (highlighted)
-        {
-            lightOverlay.color = new Color(0.0f, 1.0f, 0.0f, 0.4f);
-        } else
-        {
-            if (isLit)
-            {
-                lightOverlay.color = Color.white;
-            } else
-            {
-                lightOverlay.color = Color.clear;
-            }
-        }
-    }
+    //public void SetHighlight(bool highlighted)
+    //{
+    //    if (highlighted)
+    //    {
+    //        lightOverlay.color = new Color(0.0f, 1.0f, 0.0f, 0.4f);
+    //    } else
+    //    {
+    //        if (isLit)
+    //        {
+    //            lightOverlay.color = Color.white;
+    //        } else
+    //        {
+    //            lightOverlay.color = Color.clear;
+    //        }
+    //    }
+    //}
 
     public void AddPlayer(Player player)
     {

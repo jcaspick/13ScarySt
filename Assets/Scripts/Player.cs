@@ -11,6 +11,10 @@ public class Player : MonoBehaviour
     public int remainingActions = 0;
     public Color color;
 
+    public SpriteRenderer mainSprite;
+    public SpriteRenderer glowSprite;
+    public Sprite[] sprites;
+
     public void BeginTurn()
     {
         remainingActions = 2;

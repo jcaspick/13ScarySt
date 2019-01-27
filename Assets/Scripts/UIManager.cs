@@ -23,20 +23,27 @@ public class UIManager : MonoBehaviour
     public Text remainingActions;
     public Text endGameText;
 
+    public GameObject actionIndicator;
     public GameObject actionsCounter;
     public CanvasGroup avertYourEyesOverlay;
     public CanvasGroup endGameOverlay;
     public UIBatteryMeter batteryMeter;
     public UIFearMeter fearMeter;
 
+    public List<GameObject> activeIndicators;
+
     GameManager.Actions nextAction = GameManager.Actions.None;
     List<Room> validRooms;
     Player activePlayer;
+    Color ghostMarkerColor;
 
     private void Awake()
     {
         if (instance == null) instance = this;
         else if (instance != this) Destroy(gameObject);
+
+        activeIndicators = new List<GameObject>();
+        ghostMarkerColor = new Color(59.0f / 255.0f, 59.0f / 255.0f, 33.0f / 255.0f, 1.0f);
     }
 
     private void Start()
@@ -139,7 +146,25 @@ public class UIManager : MonoBehaviour
 
         foreach (Room room in validRooms)
         {
-            room.SetHighlight(true);
+            //room.SetHighlight(true);
+            UIActionIndicator indicator = Instantiate(actionIndicator).GetComponent<UIActionIndicator>();
+            indicator.transform.position = room.transform.position + Vector3.up * 3.0f;
+            
+            if (activePlayer.isGhost)
+            {
+                indicator.SetupIndicator(UIActionIndicator.Indicator.MoveGhost, ghostMarkerColor);
+            } else
+            {
+                if (room.isLit)
+                {
+                    indicator.SetupIndicator(UIActionIndicator.Indicator.MoveHumanLit, activePlayer.color);
+                } else
+                {
+                    indicator.SetupIndicator(UIActionIndicator.Indicator.MoveHumanUnlit, activePlayer.color);
+                }
+            }
+
+            activeIndicators.Add(indicator.gameObject);
         }
 
         EventManager.AddListener(EventManager.EventType.RoomClicked, SelectRoom);
@@ -166,7 +191,10 @@ public class UIManager : MonoBehaviour
 
         foreach (Room room in validRooms)
         {
-            room.SetHighlight(true);
+            UIActionIndicator indicator = Instantiate(actionIndicator).GetComponent<UIActionIndicator>();
+            indicator.transform.position = room.transform.position + Vector3.up * 3.0f;
+            indicator.SetupIndicator(UIActionIndicator.Indicator.TurnOffLight, ghostMarkerColor);
+            activeIndicators.Add(indicator.gameObject);
         }
 
         EventManager.AddListener(EventManager.EventType.RoomClicked, SelectRoom);
@@ -191,9 +219,15 @@ public class UIManager : MonoBehaviour
                     break;
             }
 
-            foreach (Room room in validRooms)
+            //foreach (Room room in validRooms)
+            //{
+            //    room.SetHighlight(false);
+            //}
+            for (int i = activeIndicators.Count - 1; i >= 0; i--)
             {
-                room.SetHighlight(false);
+                GameObject toDelete = activeIndicators[i];
+                activeIndicators.Remove(toDelete);
+                Destroy(toDelete);
             }
             EventManager.RemoveListener(EventManager.EventType.RoomClicked, SelectRoom);
         }

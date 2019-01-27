@@ -1867,11 +1867,14 @@ MonoBehaviour:
   turnDisplay: {fileID: 411099797}
   remainingActions: {fileID: 343268657}
   endGameText: {fileID: 1755455542}
+  actionIndicator: {fileID: 4243613584992087431, guid: 5e98789199624244bb5894a3ec276f27,
+    type: 3}
   actionsCounter: {fileID: 1739367747}
   avertYourEyesOverlay: {fileID: 1732032303}
   endGameOverlay: {fileID: 1655929969}
   batteryMeter: {fileID: 671597570}
   fearMeter: {fileID: 1464203096}
+  activeIndicators: []
 --- !u!1 &343268655
 GameObject:
   m_ObjectHideFlags: 0
@@ -7113,12 +7116,12 @@ MonoBehaviour:
   - {fileID: 2061338097}
   - {fileID: 756596628}
   playerColors:
-  - {r: 1, g: 0, b: 0, a: 0}
-  - {r: 0.00965023, g: 0, b: 1, a: 0}
-  - {r: 0.091415524, g: 1, b: 0, a: 0}
-  - {r: 1, g: 0, b: 0.89338493, a: 0}
-  ghostColor: {r: 0.18503025, g: 0.3962264, b: 0.212838, a: 0}
-  playerMarker: {fileID: 6555771716461888819, guid: 1c4825217bdfa544bb6d59d1ca20fa57,
+  - {r: 0.972549, g: 0.18039216, b: 0.18039216, a: 1}
+  - {r: 1, g: 0.69411767, b: 0, a: 1}
+  - {r: 0.101960786, g: 0.5686275, b: 0.5058824, a: 1}
+  - {r: 0.6698113, g: 0.15481488, b: 0.6152821, a: 1}
+  ghostColor: {r: 1, g: 1, b: 1, a: 1}
+  playerMarker: {fileID: 7775340879070788820, guid: 6389ae0f57bd9be409d8a8c31f7179e5,
     type: 3}
   maxFear: 13
 --- !u!4 &1331643164

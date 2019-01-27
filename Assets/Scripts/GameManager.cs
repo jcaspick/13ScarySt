@@ -58,21 +58,38 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < numHumans; i++)
         {
-            Player newPlayer = Instantiate(playerMarker).AddComponent<Player>();
+            //Player newPlayer = Instantiate(playerMarker).AddComponent<Player>();
+            //newPlayer.gameObject.SetActive(false);
+            //newPlayer.isGhost = false;
+            //newPlayer.playerName = string.Format("Human {0}", i + 1);
+            //newPlayer.color = playerColors[i];
+            //players.Add(newPlayer);
+
+            Player newPlayer = Instantiate(playerMarker).GetComponent<Player>();
             newPlayer.gameObject.SetActive(false);
             newPlayer.isGhost = false;
             newPlayer.playerName = string.Format("Human {0}", i + 1);
             newPlayer.color = playerColors[i];
+
+            newPlayer.mainSprite.sprite = newPlayer.sprites[4];
+            newPlayer.mainSprite.color = newPlayer.color;
+            newPlayer.glowSprite.sprite = newPlayer.sprites[5];
+
             players.Add(newPlayer);
         }
 
         for (int j = 0; j < numGhosts; j++)
         {
-            Player newGhost = Instantiate(playerMarker).AddComponent<Player>();
+            Player newGhost = Instantiate(playerMarker).GetComponent<Player>();
             newGhost.gameObject.SetActive(false);
             newGhost.isGhost = true;
             newGhost.playerName = string.Format("Ghost {0}", j + 1);
             newGhost.color = ghostColor;
+
+            newGhost.mainSprite.sprite = newGhost.sprites[0];
+            newGhost.mainSprite.color = newGhost.color;
+            newGhost.glowSprite.sprite = newGhost.sprites[1];
+
             players.Add(newGhost);
         }
 
@@ -218,10 +235,10 @@ public class GameManager : MonoBehaviour
 
         if (activePlayer.isGhost)
         {
-            activePlayer.GetComponent<Renderer>().material.color = ghostColor;
+            //activePlayer.GetComponent<Renderer>().material.color = ghostColor;
         } else
         {
-            activePlayer.GetComponent<Renderer>().material.color = playerColors[activePlayerIndex];
+            //activePlayer.GetComponent<Renderer>().material.color = playerColors[activePlayerIndex];
             details.room.SetLight(true);
         }
 
