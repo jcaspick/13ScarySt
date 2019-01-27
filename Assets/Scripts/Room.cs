@@ -14,19 +14,19 @@ public class Room : MonoBehaviour
     private void Start()
     {
         playersInRoom = new List<Player>();
-        SetLight(false);
+        lightOverlay.color = Color.clear;
     }
 
     public void SetLight(bool on)
     {
         if (on)
         {
-            lightOverlay.color = Color.white;
+            StartCoroutine(LightsOn());
             isLit = true;
         }
         else
         {
-            lightOverlay.color = Color.clear;
+            StartCoroutine(LightsOut());
             isLit = false;
         }
     }
@@ -62,6 +62,11 @@ public class Room : MonoBehaviour
 
     public void OrganizeRoom()
     {
+        foreach (Player player in playersInRoom)
+        {
+            player.transform.position = transform.position;
+        }
+
         if (playersInRoom.Count == 1) return;
 
         float offsetMagnitude = 0.2f;
@@ -87,5 +92,37 @@ public class Room : MonoBehaviour
     public bool IsOccupied()
     {
         return playersInRoom.Count > 0;
+    }
+
+    IEnumerator LightsOn()
+    {
+        float duration = 0.2f;
+        float elapsed = 0.0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            lightOverlay.color = Color.Lerp(Color.clear, Color.white, elapsed / duration);
+            yield return null;
+        }
+        lightOverlay.color = Color.white;
+    }
+
+    IEnumerator LightsOut()
+    {
+        float duration = 0.6f;
+        float elapsed = 0.0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            if (Random.Range(0.0f, 1.0f) >= (elapsed / duration))
+            {
+                lightOverlay.color = new Color(1.0f, 1.0f, 1.0f, 0.75f);
+            } else
+            {
+                lightOverlay.color = Color.clear;
+            }
+            yield return null;
+        }
+        lightOverlay.color = Color.clear;
     }
 }
