@@ -133,8 +133,10 @@ public class GameManager : MonoBehaviour
         StartCoroutine(EndOfTurnDelay(firstRound ? 0 : 0.5f));
     }
 
-    void HandlePlayerAction(Actions type, Room room = null)
+    IEnumerator HandlePlayerAction(Actions type, Room room = null)
     {
+        allowInput = false;
+
         switch (type)
         {
             case Actions.Idle:
@@ -145,10 +147,10 @@ public class GameManager : MonoBehaviour
                 {
                     activePlayer.flashLightCharge--;
                 }
-                activePlayer.transform.position = room.transform.position;
-                activePlayer.currentRoom.playersInRoom.Remove(activePlayer);
+                yield return StartCoroutine(LerpPlayer(activePlayer, room.transform.position, 0.5f));
+                activePlayer.currentRoom.RemovePlayer(activePlayer);
                 activePlayer.currentRoom = room;
-                room.playersInRoom.Add(activePlayer);
+                room.AddPlayer(activePlayer);
                 activePlayer.remainingActions--;
                 break;
             case Actions.TurnOnLight:
@@ -165,9 +167,13 @@ public class GameManager : MonoBehaviour
                 break;
         }
 
+        yield return null;
+
         EventDetails details = new EventDetails();
         details.player = activePlayer;
         EventManager.Invoke(EventManager.EventType.UpdateActionsUI, details);
+
+        allowInput = true;
 
         if (CheckHumanWinCondition())
         {
@@ -182,18 +188,33 @@ public class GameManager : MonoBehaviour
     public static void PlayerInput(Actions type, Room room = null)
     {
         if (!instance.allowInput) return;
-        instance.HandlePlayerAction(type, room);
+        instance.StartCoroutine(instance.HandlePlayerAction(type, room));
+    }
+
+    IEnumerator LerpPlayer(Player player, Vector3 end, float duration)
+    {
+        float elapsed = 0.0f;
+        Vector3 start = player.transform.position;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            player.transform.position = Vector3.Lerp(start, end, 
+                Mathf.SmoothStep(0, 1, elapsed / duration));
+            yield return null;
+        }
+        player.transform.position = end;
     }
 
     void ChooseStartLocation(EventDetails details)
     {
         if (!instance.allowInput) return;
-        if (activePlayer.isGhost && details.room.playersInRoom.Count > 0) return;
+        if (activePlayer.isGhost && details.room.IsOccupied()) return;
 
         activePlayer.transform.position = details.room.transform.position;
         activePlayer.gameObject.SetActive(true);
         activePlayer.currentRoom = details.room;
-        details.room.playersInRoom.Add(activePlayer);
+
+        details.room.AddPlayer(activePlayer);
 
         if (activePlayer.isGhost)
         {

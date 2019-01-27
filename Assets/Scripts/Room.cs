@@ -6,19 +6,27 @@ public class Room : MonoBehaviour
 {
     public List<Room> doors;
     public List<Room> sharedWalls;
-    public List<Player> playersInRoom;
+    List<Player> playersInRoom;
     public bool isLit = false;
+
+    public SpriteRenderer lightOverlay;
+
+    private void Start()
+    {
+        playersInRoom = new List<Player>();
+        SetLight(false);
+    }
 
     public void SetLight(bool on)
     {
         if (on)
         {
-            GetComponent<Renderer>().material.color = new Color(0.6f, 0.6f, 0.6f, 1.0f);
+            lightOverlay.color = Color.white;
             isLit = true;
         }
         else
         {
-            GetComponent<Renderer>().material.color = new Color(0.1f, 0.1f, 0.1f, 1.0f);
+            lightOverlay.color = Color.clear;
             isLit = false;
         }
     }
@@ -27,16 +35,45 @@ public class Room : MonoBehaviour
     {
         if (highlighted)
         {
-            GetComponent<Renderer>().material.color = new Color(0.2f, 0.7f, 0.3f, 1.0f);
+            lightOverlay.color = new Color(0.0f, 1.0f, 0.0f, 0.4f);
         } else
         {
             if (isLit)
             {
-                GetComponent<Renderer>().material.color = new Color(0.6f, 0.6f, 0.6f, 1.0f);
+                lightOverlay.color = Color.white;
             } else
             {
-                GetComponent<Renderer>().material.color = new Color(0.1f, 0.1f, 0.1f, 1.0f);
+                lightOverlay.color = Color.clear;
             }
+        }
+    }
+
+    public void AddPlayer(Player player)
+    {
+        playersInRoom.Add(player);
+        OrganizeRoom();
+    }
+
+    public void RemovePlayer(Player player)
+    {
+        playersInRoom.Remove(player);
+        OrganizeRoom();
+    }
+
+    public void OrganizeRoom()
+    {
+        if (playersInRoom.Count == 1) return;
+
+        float offsetMagnitude = 0.2f;
+        Vector3[] offsets = new Vector3[playersInRoom.Count];
+        for (int i = 0; i < playersInRoom.Count; i++)
+        {
+            Vector3 offset = Vector3.right * offsetMagnitude;
+            Quaternion rot = Quaternion.AngleAxis(i * (360.0f / playersInRoom.Count), Vector3.up);
+            offset = rot * offset;
+            offsets[i] = offset;
+
+            playersInRoom[i].transform.position += offset;
         }
     }
 
@@ -45,5 +82,10 @@ public class Room : MonoBehaviour
         EventDetails details = new EventDetails();
         details.room = this;
         EventManager.Invoke(EventManager.EventType.RoomClicked, details);
+    }
+
+    public bool IsOccupied()
+    {
+        return playersInRoom.Count > 0;
     }
 }
