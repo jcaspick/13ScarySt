@@ -61,6 +61,7 @@ public class GameManager : MonoBehaviour
             newPlayer.gameObject.SetActive(false);
             newPlayer.isGhost = false;
             newPlayer.playerName = string.Format("Human {0}", i + 1);
+            newPlayer.color = playerColors[i];
             players.Add(newPlayer);
         }
 
@@ -70,12 +71,14 @@ public class GameManager : MonoBehaviour
             newGhost.gameObject.SetActive(false);
             newGhost.isGhost = true;
             newGhost.playerName = string.Format("Ghost {0}", j + 1);
+            newGhost.color = ghostColor;
             players.Add(newGhost);
         }
 
         activePlayerIndex = 0;
         activePlayer = players[activePlayerIndex];
         EventManager.AddListener(EventManager.EventType.RoomClicked, ChooseStartLocation);
+        UIManager.instance.fearMeter.SetFearLevel(0);
         BeginPlayerTurn();
     }
 
@@ -125,12 +128,15 @@ public class GameManager : MonoBehaviour
                 EventManager.RemoveListener(EventManager.EventType.RoomClicked, ChooseStartLocation);
             } else
             {
+                fearLevel++;
+                EventDetails details = new EventDetails();
+                details.intValue = fearLevel;
+                EventManager.Invoke(EventManager.EventType.UpdateFearUI, details);
                 if (fearLevel >= maxFear)
                 {
                     UIManager.ShowAnnouncement("GHOSTS WIN");
                     return;
                 }
-                fearLevel++;
             }
         }
 

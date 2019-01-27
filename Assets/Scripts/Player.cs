@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
     public Room currentRoom = null;
     public int flashLightCharge = 4;
     public int remainingActions = 0;
+    public Color color;
 
     public void BeginTurn()
     {

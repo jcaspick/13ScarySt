@@ -7,19 +7,25 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
 
+    public GameObject humanActions;
+    public GameObject ghostActions;
+
     public Button idleButton;
     public Button moveButton;
     public Button lightsOnButton;
-    public Button lightsOffButton;
     public Button chargeButton;
+
+    public Button ghostIdle;
+    public Button ghostMove;
+    public Button lightsOffButton;
 
     public Text turnDisplay;
     public Text remainingActions;
-    public Text fearMeter;
     public Text announcement;
 
     public CanvasGroup screenFader;
     public UIBatteryMeter batteryMeter;
+    public UIFearMeter fearMeter;
 
     GameManager.Actions nextAction = GameManager.Actions.None;
     List<Room> validRooms;
@@ -40,16 +46,19 @@ public class UIManager : MonoBehaviour
         idleButton.onClick.AddListener(IdleButton);
         moveButton.onClick.AddListener(MoveButton);
         lightsOnButton.onClick.AddListener(LightsOnButton);
-        lightsOffButton.onClick.AddListener(LightsOffButton);
         chargeButton.onClick.AddListener(ChargeButton);
+
+        ghostIdle.onClick.AddListener(IdleButton);
+        ghostMove.onClick.AddListener(MoveButton);
+        lightsOffButton.onClick.AddListener(LightsOffButton);
+        
         validRooms = new List<Room>();
     }
 
     void UpdateActions(EventDetails details)
     {
         activePlayer = details.player;
-        remainingActions.text = string.Format("Remaining actions: {0}", 
-            activePlayer.remainingActions.ToString());
+        remainingActions.text = activePlayer.remainingActions.ToString();
         batteryMeter.UpdateDisplay(activePlayer.flashLightCharge);
 
         if (activePlayer.remainingActions == 0)
@@ -57,24 +66,27 @@ public class UIManager : MonoBehaviour
             idleButton.interactable = false;
             moveButton.interactable = false;
             lightsOnButton.interactable = false;
-            lightsOffButton.interactable = false;
             chargeButton.interactable = false;
+            lightsOffButton.interactable = false;
+            ghostIdle.interactable = false;
+            ghostMove.interactable = false;
         } else
         {
             if (activePlayer.isGhost)
             {
-                idleButton.interactable = !activePlayer.currentRoom.isLit;
-                moveButton.interactable = activePlayer.CanMove();
-                lightsOnButton.interactable = false;
+                ghostActions.SetActive(true);
+                humanActions.SetActive(false);
+                ghostIdle.interactable = !activePlayer.currentRoom.isLit;
+                ghostMove.interactable = activePlayer.CanMove();
                 lightsOffButton.interactable = !activePlayer.currentRoom.isLit && CanTurnOffLights();
-                chargeButton.interactable = false;
             }
             else
             {
+                ghostActions.SetActive(false);
+                humanActions.SetActive(true);
                 idleButton.interactable = true;
                 moveButton.interactable = activePlayer.CanMove();
                 lightsOnButton.interactable = !activePlayer.currentRoom.isLit;
-                lightsOffButton.interactable = false;
                 chargeButton.interactable = activePlayer.flashLightCharge < 4;
             }
         }
@@ -82,12 +94,15 @@ public class UIManager : MonoBehaviour
 
     void UpdateFearMeter(EventDetails details)
     {
-        fearMeter.text = string.Format("Fear: {0}", details.intValue);
+        fearMeter.SetFearLevel(details.intValue);
     }
 
     void UpdateTurnsDisplay(EventDetails details)
     {
-        turnDisplay.text = details.player.playerName;
+        //turnDisplay.text = details.player.playerName;
+        turnDisplay.text = string.Format("<color=#{0}ff>{1}</color> TURN",
+            ColorUtility.ToHtmlStringRGB(details.player.color),
+            details.player.playerName.ToUpper());
     }
 
     void IdleButton()
