@@ -22,10 +22,12 @@ public class UIManager : MonoBehaviour
     public Text turnDisplay;
     public Text remainingActions;
     public Text endGameText;
+    public Text roundCount;
 
     public GameObject actionIndicator;
     public GameObject actionsCounter;
     public CanvasGroup avertYourEyesOverlay;
+    public CanvasGroup humanTurnOverlay;
     public CanvasGroup endGameOverlay;
     public UIBatteryMeter batteryMeter;
     public UIFearMeter fearMeter;
@@ -51,6 +53,7 @@ public class UIManager : MonoBehaviour
         EventManager.AddListener(EventManager.EventType.UpdateActionsUI, UpdateActions);
         EventManager.AddListener(EventManager.EventType.UpdateFearUI, UpdateFearMeter);
         EventManager.AddListener(EventManager.EventType.UpdateTurnsUI, UpdateTurnsDisplay);
+        EventManager.AddListener(EventManager.EventType.UpdateRoundsCountUI, UpdateRoundsCountDisplay);
 
         idleButton.onClick.AddListener(IdleButton);
         moveButton.onClick.AddListener(MoveButton);
@@ -111,9 +114,21 @@ public class UIManager : MonoBehaviour
     void UpdateTurnsDisplay(EventDetails details)
     {
         //turnDisplay.text = details.player.playerName;
-        turnDisplay.text = string.Format("<color=#{0}ff>{1}</color> TURN",
+        string turnType = "TURN";
+        if(GameManager.instance.firstRound)
+        {
+            turnType = "PLACEMENT";
+        }
+
+        turnDisplay.text = string.Format("<color=#{0}ff>{1}</color> {2}",
             ColorUtility.ToHtmlStringRGB(details.player.color),
-            details.player.playerName.ToUpper());
+            details.player.playerName.ToUpper(),
+            turnType);
+    }
+
+    void UpdateRoundsCountDisplay(EventDetails details)
+    {
+        roundCount.text = "Round " + details.intValue;
     }
 
     void IdleButton()
@@ -268,21 +283,30 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public static void AvertYourEyesOverlay(float duration)
+    /*public static void AvertYourEyesOverlay(float duration)
     {
-        instance.StartCoroutine(instance.AvertYourEyesFadeIn(1.0f));
-    }
+        instance.StartCoroutine(instance.AvertYourEyesFadeIn(1.0f,));
+    }*/
 
-    public IEnumerator AvertYourEyesFadeIn(float duration)
+    public IEnumerator TurnPhaseOverlayFadeIn(float duration, string type)
     {
-        avertYourEyesOverlay.gameObject.SetActive(true);
+        CanvasGroup overlay;
+        if(type == "human")
+        {
+            overlay = avertYourEyesOverlay;
+        }
+        else
+        {
+            overlay = humanTurnOverlay;
+        }
+        overlay.gameObject.SetActive(true);
         float fadeDuration = 0.5f;
         float elapsed = 0.0f;
 
         while (elapsed < fadeDuration)
         {
             elapsed += Time.deltaTime;
-            avertYourEyesOverlay.alpha = elapsed / fadeDuration;
+            overlay.alpha = elapsed / fadeDuration;
             yield return null;
         }
 
@@ -301,12 +325,12 @@ public class UIManager : MonoBehaviour
         while (elapsed < fadeDuration)
         {
             elapsed += Time.deltaTime;
-            avertYourEyesOverlay.alpha = 1.0f - (elapsed / fadeDuration);
+            overlay.alpha = 1.0f - (elapsed / fadeDuration);
             yield return null;
         }
 
-        avertYourEyesOverlay.alpha = 0.0f;
-        avertYourEyesOverlay.gameObject.SetActive(false);
+        overlay.alpha = 0.0f;
+        overlay.gameObject.SetActive(false);
     }
 
     public static void FirstTurnUI()

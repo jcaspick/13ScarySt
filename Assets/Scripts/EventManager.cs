@@ -17,7 +17,8 @@ public class EventManager : MonoBehaviour
         RoomClicked,
         UpdateActionsUI,
         UpdateFearUI,
-        UpdateTurnsUI
+        UpdateTurnsUI,
+        UpdateRoundsCountUI
     }
 
     public static EventManager instance;
