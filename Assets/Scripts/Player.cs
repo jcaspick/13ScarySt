@@ -15,9 +15,9 @@ public class Player : MonoBehaviour
     public SpriteRenderer glowSprite;
     public Sprite[] sprites;
 
-    public void BeginTurn()
+    private void Awake()
     {
-        remainingActions = 2;
+        flashLightCharge = GameManager.instance.numBatteries;
     }
 
     public bool CanMove()

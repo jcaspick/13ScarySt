@@ -7,6 +7,13 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    public enum GameMode
+    {
+        Rounds,
+        LightsOut
+    }
+    public GameMode gameMode;
+
     public enum Actions
     {
         None,
@@ -23,6 +30,9 @@ public class GameManager : MonoBehaviour
 
     public int numHumans = 2;
     public int numGhosts = 1;
+    public int numHumanActions = 2;
+    public int numGhostActions = 2;
+    public int numBatteries = 4;
     int activeGhosts;
 
     public List<Room> house;
@@ -33,9 +43,10 @@ public class GameManager : MonoBehaviour
     List<Player> players;
     Player activePlayer = null;
     int activePlayerIndex = -1;
+    int round = 1;
     int fearLevel = 0;
     public int maxFear = 13;
-    bool firstRound = true;
+    public bool firstRound = true;
     bool ghostTurn = false;
     bool allowInput = false;
 
@@ -110,7 +121,9 @@ public class GameManager : MonoBehaviour
 
         if (!firstRound)
         {
-            activePlayer.remainingActions = 2;
+            StartCoroutine(HighlightActivePlayer(activePlayer, 1.5f, 0.5f));
+            
+            activePlayer.remainingActions = NumAvailableActions();
             if (activePlayer.isGhost && activePlayer.currentRoom.isLit)
                 activePlayer.remainingActions--;
 
@@ -133,26 +146,45 @@ public class GameManager : MonoBehaviour
                 EventManager.RemoveListener(EventManager.EventType.RoomClicked, ChooseStartLocation);
             } else
             {
-                fearLevel++;
                 EventDetails details = new EventDetails();
-                details.intValue = fearLevel;
-                EventManager.Invoke(EventManager.EventType.UpdateFearUI, details);
-                if (fearLevel >= maxFear)
+                round++;
+                details.intValue = round;
+                EventManager.Invoke(EventManager.EventType.UpdateRoundsCountUI, details);
+
+                if(gameMode == GameMode.Rounds)
                 {
-                    UIManager.EndGameOverlay("GHOSTS WIN");
-                    allowInput = false;
-                    return;
+                    fearLevel++;
+                    CheckGhostWinCondition();
                 }
             }
         }
+        StartCoroutine(HighlightActivePlayer(activePlayer, 1.0f, 0.2f));
 
         activePlayer = players[activePlayerIndex];
         StartCoroutine(EndOfTurnDelay(firstRound ? 0 : 0.5f));
     }
 
+    IEnumerator HighlightActivePlayer(Player player, float targetScale, float duration)
+    {
+        float elapsed = 0.0f;
+        Vector3 startScale = player.transform.localScale;
+        Vector3 endScale = new Vector3(targetScale, targetScale, targetScale);
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            player.transform.localScale = Vector3.Lerp(startScale, endScale,
+                Mathf.SmoothStep(0, 1, elapsed / duration));
+            yield return null;
+        }
+        player.transform.localScale = endScale;
+    }
+
     IEnumerator HandlePlayerAction(Actions type, Room room = null)
     {
         allowInput = false;
+
+        EventDetails details = new EventDetails();
 
         switch (type)
         {
@@ -178,27 +210,33 @@ public class GameManager : MonoBehaviour
             case Actions.TurnOffLight:
                 room.SetLight(false);
                 activePlayer.remainingActions--;
+
+                if(gameMode == GameMode.LightsOut)
+                {
+                    fearLevel++;
+
+                    details.intValue = fearLevel;
+                    EventManager.Invoke(EventManager.EventType.UpdateFearUI, details);
+
+                    CheckGhostWinCondition();
+                }
+
                 break;
             case Actions.ChargeFlashlight:
-                activePlayer.flashLightCharge = 4;
+                activePlayer.flashLightCharge = numBatteries;
                 activePlayer.remainingActions--;
                 break;
         }
 
         yield return null;
 
-        EventDetails details = new EventDetails();
         details.player = activePlayer;
         EventManager.Invoke(EventManager.EventType.UpdateActionsUI, details);
 
         allowInput = true;
 
-        if (CheckHumanWinCondition())
-        {
-            UIManager.EndGameOverlay("HUMANS WIN");
-            allowInput = false;
-        } else  if (activePlayer.remainingActions <= 0)
-        {
+        if (!CheckHumanWinCondition() && activePlayer.remainingActions <= 0)
+        { 
             EndPlayerTurn();
         }
     }
@@ -255,7 +293,7 @@ public class GameManager : MonoBehaviour
         {
             ghostTurn = true;
 
-            yield return StartCoroutine(UIManager.instance.AvertYourEyesFadeIn(4.0f));
+            yield return StartCoroutine(UIManager.instance.TurnPhaseOverlayFadeIn(4.0f, "human"));
 
             foreach (Player player in players)
             {
@@ -264,10 +302,15 @@ public class GameManager : MonoBehaviour
         }
         else if (!activePlayer.isGhost && ghostTurn)
         {
-            ghostTurn = false;
-            foreach (Player player in players)
+            if(ghostTurn)
             {
-                if (player.isGhost) player.gameObject.SetActive(false);
+                foreach (Player player in players)
+                {
+                    if (player.isGhost) player.gameObject.SetActive(false);
+                }
+
+                yield return StartCoroutine(UIManager.instance.TurnPhaseOverlayFadeIn(4.0f, "ghost"));
+                ghostTurn = false;
             }
         }
 
@@ -284,11 +327,13 @@ public class GameManager : MonoBehaviour
             {
                 activeGhosts--;
 
-
                 players.Remove(player);
 
                 if (activeGhosts <= 0)
                 {
+                    UIManager.EndGameOverlay("HUMANS WIN");
+                    allowInput = false;
+
                     return true;
                 }
             }
@@ -303,6 +348,18 @@ public class GameManager : MonoBehaviour
         {
             StartCoroutine(CaughtGhost(room));
         }
+    }
+
+    bool CheckGhostWinCondition()
+    {
+        if (fearLevel >= maxFear)
+        {
+            UIManager.EndGameOverlay("GHOSTS WIN");
+            allowInput = false;
+
+            return true;
+        }
+        return false;
     }
 
     IEnumerator CaughtGhost(Room room)
@@ -327,5 +384,13 @@ public class GameManager : MonoBehaviour
         }
 
         Destroy(ghostIcon.gameObject);
+    }
+
+    int NumAvailableActions()
+    {
+        if (activePlayer.isGhost)
+            return numGhostActions;
+
+        return numHumanActions;
     }
 }
