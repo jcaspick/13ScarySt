@@ -67,6 +67,14 @@ public class UIManager : MonoBehaviour
         validRooms = new List<Room>();
     }
 
+    private void OnGUI()
+    {
+        if (Input.GetMouseButton(0) && GameManager.instance.gameEnded)
+        {
+            endGameOverlay.gameObject.SetActive(false);
+        }
+    }
+
     void UpdateActions(EventDetails details)
     {
         activePlayer = details.player;
@@ -268,10 +276,10 @@ public class UIManager : MonoBehaviour
 
     public static void EndGameOverlay(string text)
     {
-        instance.StartCoroutine(instance.EndGameFadeIn(0.5f, text));
+        instance.StartCoroutine(instance.ShowEndGameOverlay(0.5f, text));
     }
 
-    IEnumerator EndGameFadeIn(float duration, string text)
+    IEnumerator ShowEndGameOverlay(float duration, string text)
     {
         endGameText.text = text;
         float elapsed = 0.0f;
@@ -281,12 +289,8 @@ public class UIManager : MonoBehaviour
             endGameOverlay.alpha = elapsed / duration;
             yield return null;
         }
+        GameManager.instance.gameEnded = true;
     }
-
-    /*public static void AvertYourEyesOverlay(float duration)
-    {
-        instance.StartCoroutine(instance.AvertYourEyesFadeIn(1.0f,));
-    }*/
 
     public IEnumerator TurnPhaseOverlayFadeIn(float duration, string type)
     {

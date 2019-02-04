@@ -33,6 +33,8 @@ public class GameManager : MonoBehaviour
     public int numHumanActions = 2;
     public int numGhostActions = 2;
     public int numBatteries = 4;
+    public bool caughtGhostPenalty = false;
+    public bool darkRoomPenalty = false;
     int activeGhosts;
 
     public List<Room> house;
@@ -47,6 +49,7 @@ public class GameManager : MonoBehaviour
     int fearLevel = 0;
     public int maxFear = 13;
     public bool firstRound = true;
+    public bool gameEnded = false;
     bool ghostTurn = false;
     bool allowInput = false;
 
@@ -124,8 +127,6 @@ public class GameManager : MonoBehaviour
             StartCoroutine(HighlightActivePlayer(activePlayer, 1.5f, 0.5f));
             
             activePlayer.remainingActions = NumAvailableActions();
-            if (activePlayer.isGhost && activePlayer.currentRoom.isLit)
-                activePlayer.remainingActions--;
 
             details.player = activePlayer;
             EventManager.Invoke(EventManager.EventType.UpdateActionsUI, details);
@@ -388,9 +389,22 @@ public class GameManager : MonoBehaviour
 
     int NumAvailableActions()
     {
-        if (activePlayer.isGhost)
-            return numGhostActions;
+        int availableActions = 0;
 
-        return numHumanActions;
+        if (activePlayer.isGhost) {
+            availableActions = numGhostActions;
+
+            if (activePlayer.currentRoom.isLit && caughtGhostPenalty)
+                availableActions--;
+        }
+        else
+        {
+            availableActions = numHumanActions;
+
+            if (!activePlayer.currentRoom.isLit && darkRoomPenalty)
+                availableActions--;
+        }
+
+        return availableActions;
     }
 }
